@@ -1,5 +1,5 @@
 <template>
-    <div class="container mx-auto p-4">
+    <div class="container mx-auto p-4 bg-gray-300 border-2 border-black">
         <div>Combat</div>
         <div class="flex">
             <div class="flex">

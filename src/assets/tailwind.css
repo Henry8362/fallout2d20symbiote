@@ -10,3 +10,12 @@
     background-repeat: no-repeat;
     
 }
+
+.gear-bg {
+
+    background-image: url(gear.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 100%;
+}
