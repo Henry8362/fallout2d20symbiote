@@ -1,0 +1,68 @@
+{
+    "weapons": [
+        {
+            
+                "name": "10mm Pistol",
+                "skill": "Skill 1",
+                "tn": "TN 1",
+                "tag": "TAG 1",
+                "damage": "DAMAGE 1",
+                "effects": "EFFECTS 1",
+                "type": "TYPE 1",
+                "rate": "RATE 1",
+                "range": "RANGE 1",
+                "qualities": "QUALITIES 1",
+                "ammo": "AMMO 1"
+                
+
+                
+            
+        },
+        { 
+            "name": "Switchblade",
+            "skill": "Melee Weapons",
+            "tn": "7",
+            "tag": "false",
+            "damage": "2",
+            "effects": "Phys.",
+            "type": "Physical",
+            "rate": "—",
+            "range": "-",
+            "qualities": "Concealed",
+            "ammo": "-",
+            "weight": "1"
+
+
+        },
+        {
+            
+                "name": "Laser Rifle",
+                "skill": "Skill 2",
+                "tn": "TN 2",
+                "tag": "TAG 2",
+                "damage": "DAMAGE 2",
+                "effects": "EFFECTS 2",
+                "type": "TYPE 2",
+                "rate": "RATE 2",
+                "range": "RANGE 2",
+                "qualities": "QUALITIES 2",
+                "ammo": "AMMO 2",
+                "weight": "WEIGHT 2"
+            },
+            {
+                "name": "Minigun",
+                "skill": "Skill 3",
+                "tn": "TN 3",
+                "tag": "TAG 3",
+                "damage": "DAMAGE 3",
+                "effects": "EFFECTS 3",
+                "type": "TYPE 3",
+                "rate": "RATE 3",
+                "range": "RANGE 3",
+                "qualities": "QUALITIES 3",
+                "ammo": "AMMO 3",
+                "weight": "WEIGHT 3"
+            }
+        
+    ]
+}

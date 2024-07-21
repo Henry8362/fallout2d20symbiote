@@ -1,7 +1,7 @@
 <template>
   <div className="root-bg">
 <div class="container mx-auto">
-<h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">Fallout: The Roleplaying Game Character Sheet</h1>
+<img className="pt-4 mb-2" src="@/assets/sheet_title_white.png" />
 </div>
 <CharacterSheet/>
 </div>

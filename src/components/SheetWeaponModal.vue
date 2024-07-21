@@ -13,11 +13,19 @@
                       <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                       </svg>
-                      <span class="sr-only">Close modal</span>
+                      <span class="sr-only">Close</span>
                   </button>
               </div>
             <!-- Modal body -->
             <div class="p-4 md:p-5 space-y-4">
+                <div>
+                    <label for="category" class="block text-sm font-medium text-white">Select from a template (Optional)</label>
+                    <select @change="setWeaponTemplate" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        <option value="">Select a template</option>
+                        <option v-for="weapon in weapon_templates.weapons" :key="weapon.name" :value="weapon.name">{{ weapon.name }}</option>
+                    </select>
+
+                </div>
                 <div>
                     <label for="name" class="block text-sm font-medium text-white">Name</label>
                     <input type="text" id="name" v-model="weapon_details.name" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
@@ -69,15 +77,16 @@
             </div>
               <!-- Modal footer -->
               <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                  <button data-modal-hide="new-weapon-modal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I accept</button>
-                  <button data-modal-hide="new-weapon-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Decline</button>
+                <button @click="addWeapon" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add Weapon to sheet</button>
               </div>
           </div>
       </div>
   </div>
     </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, defineProps, defineEmits } from 'vue';
+import { onMounted } from 'vue';
+import axios from 'axios';
 const weapon_details = ref({
     name: '',
     skill: '',
@@ -92,6 +101,47 @@ const weapon_details = ref({
     ammo: '',
     weight: ''
 })
+
+const props = defineProps({
+  weapons: {
+    type: Array,
+    required: true,
+  },
+});
+
+const emit = defineEmits(['updateWeapons']);
+
+
+const weapon_templates = ref([]);
+onMounted(async () => {
+    try {
+        const response = await axios.get('weapons.json');
+        weapon_templates.value = response.data;
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+const setWeaponTemplate = (event) => {
+    const selected_weapon = weapon_templates.value.weapons.find(weapon => weapon.name === event.target.value);
+    // for each key in the selected weapon, update the weapon_details object
+    for (const key in selected_weapon) {
+        weapon_details.value[key] = selected_weapon[key];
+    }
+}
+
+const addWeapon = () => {
+  // Add the weapon_details object to the weapons array
+  const newWeapons = [...props.weapons, { ...weapon_details.value }];
+
+  // Emit the new weapons array to the parent component
+  emit('updateWeapons', newWeapons);
+
+  // Clear the weapon_details object
+  for (const key in weapon_details.value) {
+    weapon_details.value[key] = '';
+  }
+};
 
 
 </script>

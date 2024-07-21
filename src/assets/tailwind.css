@@ -1,11 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+
+body {
+    font-family: 'Oswald', sans-serif;
+}
+
 
 
 .root-bg {
 
-    background-image: url(falloutbg.jpg);
+    background-image: url(altbg2.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     
@@ -18,4 +24,15 @@
     background-repeat: no-repeat;
     background-position: center;
     min-height: 100%;
+}
+
+.combat-vault-boy {
+
+    background-image: url(Chinese_pistol_icon.webp);
+    background-size: contain;
+    background-repeat: no-repeat;
+    min-height: 100%;
+    background-position: center;
+
+
 }
