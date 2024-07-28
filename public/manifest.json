@@ -6,6 +6,7 @@
     "descriptionFilePath": "/readme.md",
     "api": {
       "version": "0.1",
+      "initializeEarly": false,
       "initTimeout": 10,
       "subscriptions": {
         "symbiote": {
