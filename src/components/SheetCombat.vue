@@ -4,16 +4,16 @@
         <div class="flex gap-2">
             <div class="flex">
                 <label for="meleeDamage" class="w-1/4 pl-1 bg-black text-white content-center font-bold">Melee Damage:</label>
-                <input type="text" id="meleeDamage" class="w-3/4 content-center" :value="meleeDamage" @input="$emit('update:meleeDamage', $event.target.value)" />
+                <input type="number" id="meleeDamage" class="w-3/4 content-center" :value="meleeDamage" @input="updateMeleeDamage" />
             </div>
                 <div class="flex">
                     <label for="defense" class="w-2/4 pl-1 bg-black text-white content-center font-bold">Defense:</label>
-                    <input type="text" id="defense" class="w-2/4 content-center" :value="defense" @input="$emit('update:defense', $event.target.value)" />
+                    <input type="number" id="defense" class="w-2/4 content-center" :value="defense" @input="updateDefense" />
                 </div>
             <div>
                 <div class="flex">
                     <label for="initiative" class="w-2/4 pl-1 bg-black text-white content-center font-bold">Initiative:</label>
-                    <input type="text" id="initiative" class="w-2/4 content-center" :value="initiative" @input="$emit('update:initiative', $event.target.value)" />
+                    <input type="number" id="initiative" class="w-2/4 content-center" :value="initiative" @input="updateInitiative"  />
                 </div>
             </div>
         </div>
@@ -21,7 +21,7 @@
             <div>
                 <div class="flex">
                     <label for="poison-dr" class="w-2/4 pl-1 bg-black text-white content-center font-bold">Poison DR:</label>
-                    <input type="text" id="poison-dr" class="w-2/4 content-center" :value="poison_dr" @input="$emit('update:poison_dr', $event.target.value)" />
+                    <input type="text" id="poison-dr" class="w-2/4 content-center" :value="poison_dr" @input="updatePoisonDR" />
                 </div>
                 <SheetCombatBodyPart class="mt-1" :stats="left_arm_stats" />
                 <SheetCombatBodyPart class="mt-1" :stats="left_leg_stats" />
@@ -51,9 +51,21 @@
 
 <script setup>
 import SheetCombatBodyPart from './SheetCombatBodyPart.vue';
-import { defineProps } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 
 defineProps({
+    meleeDamage: {
+        type: Number,
+        required: true
+    },
+    defense: {
+        type: Number,
+        required: true
+    },
+    initiative: {
+        type: Number,
+        required: true
+    },
     left_arm_stats: {
         type: Array,
         required: true
@@ -79,4 +91,23 @@ defineProps({
         required: true
     },
 });
+
+const emit = defineEmits(['updateMeleeDamage', 'updateDefense', 'updateInitiative']);
+
+const updateMeleeDamage = (newMeleeDamage) => {
+    const meleeDamage = newMeleeDamage.target.value;
+    emit('updateMeleeDamage', meleeDamage);
+};
+
+const updateDefense = (newDefense) => {
+    const defense = newDefense.target.value;
+    emit('updateDefense', defense);
+};
+
+const updateInitiative = (newInitiative) => {
+    const initiative = newInitiative.target.value;
+    emit('updateInitiative', initiative);
+};
+
+
 </script>

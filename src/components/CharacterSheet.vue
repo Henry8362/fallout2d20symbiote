@@ -1,15 +1,15 @@
 <template>
 <div>
   <form className="container mx-auto">
-    <SheetHead :name="name" @update-name="handleUpdateName" :xp_earned="xp_earned" :xp_next_level="xp_next_level" :char_origin="char_origin" :level="level"  />
-    <SheetSpecials :specialStats="specialStats" />
+    <SheetHead :charname="charname" @update-charname="handleUpdateCharName" :xp_earned="xp_earned" @update-XpEarned="handlexpEarned" :xp_next_level="xp_next_level" @update-XpNextLevel="handlexpNextLevel" :char_origin="char_origin" @update-charOrigin="handleCharOrigin" :level="level" @update-level="handleLevel"  />
+    <SheetSpecials :specialStats="specialStats" @update-special="handleUpdateSpecials" />
     
     <div class="grid grid-cols-1  gap-2 md:grid-cols-2 mt-2">
-    <SheetSkills :skills="skills" />
+    <SheetSkills :skills="skills" @update-skill="handleUpdateSkill" />
     <SheetCombat className="w-full p-1 bg-gray-300 bg-opacity-80	 border-2 rounded-lg" :right_arm_stats="right_arm_stats" :right_leg_stats="right_leg_stats" :torso_stats="torso_stats" :left_arm_stats="left_arm_stats" :left_leg_stats="left_leg_stats" :head_stats="head_stats" :meleeDamage="meleeDamage" :defense="defense" :initiative="initiative"  />
     </div>
     <SheetWeapons :weapons="weapons" @update-weapons="handleUpdateWeapons" />
-    <SheetBiography :caps="caps" :ammo="ammo" @add-ammo="handleAddAmmo" @update-ammo="handleUpdateAmmo" :gear="gear" @add-gear="handleAddGear" @update-gear="handleUpdateGear" :perks="perks" @add-perk="handleAddPerk" @update-perk="handleUpdatePerk" :biography="biography" />
+    <SheetBiography :caps="caps" :ammo="ammo" @add-ammo="handleAddAmmo" @update-ammo="handleUpdateAmmo" :gear="gear" @add-gear="handleAddGear" @update-gear="handleUpdateGear" :perks="perks" @add-perk="handleAddPerk" @update-perk="handleUpdatePerk" :biography="biography" @update-biography="handleUpdateBiography" />
 
 </form> 
 
@@ -38,9 +38,11 @@ onBeforeMount(() => {
     TS.localStorage.campaign.getBlob().then((storedData) => {
       const data = storedData;
       // data is a JSON string, so we need to parse it
+      if(data != null && data != undefined && data != "") {
+      
       const parsedData = JSON.parse(data);
       // update the props with the stored data
-      name.value = parsedData.name;
+      charname.value = parsedData.charname;
       xp_earned.value = parsedData.xp_earned;
       xp_next_level.value = parsedData.xp_next_level;
       char_origin.value = parsedData.char_origin;
@@ -63,74 +65,89 @@ onBeforeMount(() => {
       right_leg_stats.value = parsedData.right_leg_stats;
       weapons.value = parsedData.weapons;
 
+      }
+
     
     });
 
 }
 
-watch([ammo, gear, perks, biography, name, xp_earned, xp_next_level, char_origin, level], (updatedProp) => {
-  console.log("updated prop" + updatedProp);
-  handlePropUpdate(updatedProp);
-});
 });
 
-const handleUpdateName = (newName) => {
-  console.log("new name:" + newName);
-  name.value = newName;
-};
-
-
-
-/* When any sheet prop is updated, we need to save the updated value to the localStorage */
-
-// Listen for any props being updated
-const handlePropUpdate = (updatedProp) => {
-  if (typeof TS !== 'undefined' && TS.localStorage && TS.localStorage.campaign) {
-    const data = prepareBlobStructure(updatedProp);
-    TS.localStorage.campaign.setBlob(JSON.stringify(data));
-  } else {
-    console.error('TS or required methods are not available');
-  }
-};
-
-
-const prepareBlobStructure = () => {
-  return {
-  name: name.value,
-  xp_earned: xp_earned.value,
-  xp_next_level: xp_next_level.value,
-  char_origin: char_origin.value,
-  level: level.value,
-  caps: caps.value,
-  ammo: ammo.value,
-  gear: gear.value,
-  perks: perks.value,
-  biography: biography.value,
-  skills: skills,
-  specialStats: specialStats,
-  meleeDamage: meleeDamage,
-  defense: defense,
-  initiative: initiative,
-  left_arm_stats: left_arm_stats,
-  left_leg_stats: left_leg_stats,
-  head_stats: head_stats,
-  torso_stats: torso_stats,
-  right_arm_stats: right_arm_stats,
-  right_leg_stats: right_leg_stats,
-  weapons: weapons.value
-};
-
-};
-
+/* SHEETHEAD STUFF ALL FIELDS ARE WORKING */
 
 
 /* Props for sheet header */
 
-const name = ref("Vault Dweller");
+const charname = ref("Vault Dweller");
 const xp_earned = ref(0);
 const xp_next_level = ref(0);
 const char_origin = ref("Vault 13");
 const level = ref(0);
+
+/* Handlers and watchers for SheetHead component */
+
+watch([charname, xp_earned, xp_next_level, char_origin, level], (updatedProp) => {
+  console.log("updated prop" + updatedProp);
+  handlePropUpdate(updatedProp);
+});
+
+const handleUpdateCharName = (newName) => {
+  console.log("new name:" + newName);
+  charname.value = newName;
+};
+
+const handlexpEarned = (newXp) => {
+  console.log("new xp:" + newXp);
+  xp_earned.value = newXp;
+};
+
+const handlexpNextLevel = (newXpNextLevel) => {
+  console.log("new xp next level:" + newXpNextLevel);
+  xp_next_level.value = newXpNextLevel;
+};
+
+const handleCharOrigin = (newCharOrigin) => {
+  console.log("new char origin:" + newCharOrigin);
+  char_origin.value = newCharOrigin;
+};
+
+const handleLevel = (newLevel) => {
+  console.log("new level:" + newLevel);
+  level.value = newLevel;
+};
+
+
+/* SHEET SPECIALS STUFF */
+
+const specialStats = ref([
+    { name: 'Strength', value: 5, label: 'STR' },
+    { name: 'Perception', value: 5, label: 'PER' },
+    { name: 'Endurance', value: 5, label: 'END' },
+    { name: 'Charisma', value: 5, label: 'CHA' },
+    { name: 'Intelligence', value: 5, label: 'INT' },
+    { name: 'Agility', value: 5, label: 'AGI' },
+    { name: 'Luck', value: 5, label: 'LUK'}
+
+
+])
+
+const handleUpdateSpecials = (name, value) => {
+  const index = specialStats.value.findIndex(special => special.name === name);
+    const updatedSpecialStats = specialStats.value.map((special, i) =>
+      i === index ? { ...special, value: value } : special
+    );
+    specialStats.value = updatedSpecialStats;
+  
+};
+
+watch([specialStats], (updatedProp) => {
+  console.log("updated prop" + updatedProp);
+  handlePropUpdate(updatedProp);
+}, { deep: true });
+
+
+
 
 
 /* props for biography section */
@@ -140,6 +157,11 @@ const ammo = ref([]);
 const gear = ref([]);
 const perks = ref([]);
 const biography = ref("");
+
+watch([caps, ammo, gear, perks, biography], (updatedProp) => {
+  console.log("updated prop" + updatedProp);
+  handlePropUpdate(updatedProp);
+});
 
 const handleAddAmmo = (newAmmo) => {
   ammo.value.push(newAmmo);
@@ -186,6 +208,9 @@ const handleUpdatePerk = (updatePerk) => {
 
 };
 
+const handleUpdateBiography = (newBiography) => {
+  biography.value = newBiography;
+};
 
 
 // list of skills for SheetSkills component
@@ -209,17 +234,29 @@ const skills = ref([
   { name: 'Unarmed', tagged: false, stat: 'STR',rank: 0 },
 ])
 
-const specialStats = ref([
-    { name: 'Strength', value: 5, label: 'STR' },
-    { name: 'Perception', value: 5, label: 'PER' },
-    { name: 'Endurance', value: 5, label: 'END' },
-    { name: 'Charisma', value: 5, label: 'CHA' },
-    { name: 'Intelligence', value: 5, label: 'INT' },
-    { name: 'Agility', value: 5, label: 'AGI' },
-    { name: 'Luck', value: 5, label: 'LUK'}
+watch([skills], (updatedProp) => {
+  console.log("updated prop" + updatedProp);
+  handlePropUpdate(updatedProp);
+});
+
+const handleUpdateSkill = (newSkill) => {
+  // get the index of the skill object in the array
+  const index = skills.value.findIndex(newSkill => newSkill.name === newSkill.name);
+  // update it with the new skill object values
+  if(newSkill.type === 'T') {
+    skills.value[index].tagged = newSkill.value;
+  } else {
+    skills.value[index].rank = newSkill.value;
+  }
+  console.log(skills.value)
+
+};
 
 
-])
+
+
+/* COMBAT SECTION */
+
 
 
 /* Combat stats */
@@ -257,11 +294,59 @@ const right_leg_stats = ref({
   en_dr: 0
 })
 
+watch([meleeDamage, defense, initiative, left_arm_stats, left_leg_stats, head_stats, torso_stats, right_arm_stats, right_leg_stats ], (updatedProp) => {
+  console.log("updated prop" + updatedProp);
+  handlePropUpdate(updatedProp);
+});
+
+/* Handlers and watchers for weapon section */
+
+
 const weapons = ref([]);
 const handleUpdateWeapons = (newWeapons) => {
   weapons.value = newWeapons;
 };
 
+/* When any sheet prop is updated, we need to save the updated value to the localStorage */
 
+// Listen for any props being updated
+const handlePropUpdate = (updatedProp) => {
+  if (typeof TS !== 'undefined' && TS.localStorage && TS.localStorage.campaign) {
+    console.log("updated prop" + updatedProp);
+    const data = prepareBlobStructure(updatedProp);
+    TS.localStorage.campaign.setBlob(JSON.stringify(data));
+  } else {
+    console.error('TS or required methods are not available');
+  }
+};
+
+
+const prepareBlobStructure = () => {
+  return {
+  charname: charname.value,
+  xp_earned: xp_earned.value,
+  xp_next_level: xp_next_level.value,
+  char_origin: char_origin.value,
+  level: level.value,
+  caps: caps.value,
+  ammo: ammo.value,
+  gear: gear.value,
+  perks: perks.value,
+  biography: biography.value,
+  skills: skills.value,
+  specialStats: specialStats.value,
+  meleeDamage: meleeDamage.value,
+  defense: defense.value,
+  initiative: initiative.value,
+  left_arm_stats: left_arm_stats.value,
+  left_leg_stats: left_leg_stats.value,
+  head_stats: head_stats.value,
+  torso_stats: torso_stats.value,
+  right_arm_stats: right_arm_stats.value,
+  right_leg_stats: right_leg_stats.value,
+  weapons: weapons.value
+};
+
+};
 
 </script>

@@ -3,8 +3,8 @@
         <div class="grid grid-cols-3">
             <div class="flex flex-col">
                 <div className="h-2/6 md:w-3/6 flex">
-                <label class="w-1/4 pl-1 bg-black text-white content-center font-bold" for="name">Name:</label>
-                <input class="w-3/4 content-center" type="text" id="name" name="name" :value="props.name" @input="updateName">
+                <label class="w-1/4 pl-1 bg-black text-white content-center font-bold" for="charname">Name:</label>
+                <input class="w-3/4 content-center" type="text" id="charname" name="charname" :value="props.charname" @input="updateCharName">
             </div>
                 <label class="inline-flex cursor-pointer mt-2">
   <input type="checkbox" value="" class="sr-only peer">
@@ -16,21 +16,21 @@
                 <div class="flex flex-col">
                     <div class="flex items-center bg-black border-b-2 border-dotted border-gray-400">
                         <label class="w-2/4 pl-1 bg-black text-white content-center font-bold" for="xp-earned">XP Earned:</label>
-                        <input class="w-3/4 content-center" type="text" id="xp-earned" name="xp-earned" :value="props.xp_earned">
+                        <input class="w-3/4 content-center" type="text" id="xp-earned" name="xp-earned" :value="props.xp_earned" @input="updateXpEarned">
                     </div>
                     <div class="flex items-center bg-black border-b-2 border-dotted border-gray-400">
                         <label class="w-2/4 pl-1 bg-black text-white content-center font-bold h-full	" for="xp-next-level">XP to next level:</label>
-                        <input class="w-3/4  content-center" type="text" id="xp-next-level" name="xp-next-level" :value="props.xp_next_level" >
+                        <input class="w-3/4  content-center" type="text" id="xp-next-level" name="xp-next-level" :value="props.xp_next_level" @input="updateXpNextLevel" >
                     </div>
                     <div class="flex items-center bg-black">
                         <label class="w-2/4 pl-1 bg-black text-white content-center font-bold h-full	" for="char-origin">Origin:</label>
-                        <input class="w-3/4 content-center" type="text" id="char-origin" name="char-origin" :value="props.char_origin" >
+                        <input class="w-3/4 content-center" type="text" id="char-origin" name="char-origin" :value="props.char_origin" @input="updateCharOrigin" >
                     </div>
                 </div>
             </div>
             <div class="flex flex-col items-center justify-center gear-bg">
                     <label class="w-2/6 bg-black text-white text-center" for="char-origin">Level:</label>
-                    <input type="number" className="w-2/6" id="level" name="level" :value="props.level">
+                    <input type="number" className="w-2/6" id="level" name="level" :value="props.level" @input="updateLevel" >
                 </div>
         </div>
     </div>
@@ -39,7 +39,7 @@
 // get props from parent
 import { defineProps, defineEmits } from 'vue';
 const props = defineProps({
-    name: {
+    charname: {
         type: String,
         required: true
     },
@@ -61,12 +61,34 @@ const props = defineProps({
     }
 });
 
-const emit = defineEmits(['updateName']);
+const emit = defineEmits(['updateCharName', 'updateXpEarned', 'updateXpNextLevel', 'updateCharOrigin', 'updateLevel']);
 
-const updateName = (newName) => {
-    const name = newName.target.value;
-    emit('updateName', name);
+const updateCharName = (newName) => {
+    const charname = newName.target.value;
+    emit('updateCharName', charname);
 };
+
+const updateXpEarned = (newXp) => {
+    const xp = newXp.target.value;
+    emit('updateXpEarned', xp);
+};
+
+const updateXpNextLevel = (newXpNextLevel) => {
+    const xpNextLevel = newXpNextLevel.target.value;
+    emit('updateXpNextLevel', xpNextLevel);
+};
+
+const updateCharOrigin = (newCharOrigin) => {
+    const charOrigin = newCharOrigin.target.value;
+    emit('updateCharOrigin', charOrigin);
+};
+
+const updateLevel = (newLevel) => {
+    const level = newLevel.target.value;
+    emit('updateLevel', level);
+};
+
+
 
 
 

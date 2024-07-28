@@ -1,13 +1,13 @@
 <template>
-<div class="grid grid-cols-2 gap-2">
+<div class="grid md:grid-cols-2 gap-2">
     <div>
         <img className="pt-2 mb-2 " src="@/assets/caps_heading.png" />
-        <div class="w-3/6">
+        <div class="w-full md:w-3/6">
             <input type="text" id="caps" class="w-2/6" v-model="caps" />
         </div>
         <img className="pt-2 mb-2 " src="@/assets/ammo_heading.png" />
         <button @click="addAmmo" type="button" class="ml-1 mb-1 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add</button>
-        <div class="w-5/6">
+        <div class="w-full md:w-5/6">
             <table>
                 <thead>
                     <tr>
@@ -27,7 +27,7 @@
         <img className="pt-2 mb-2 " src="@/assets/gear_heading.png" />
         <button @click="addGear" type="button" class="ml-1 mb-1 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add</button>
 
-        <div class="w-5/6">
+        <div class="w-full md:w-5/6">
             <table>
                 <thead>
                     <tr>
@@ -50,7 +50,7 @@
     <div>
         <img className="pt-2 mb-2 " src="@/assets/perks_heading.png" />
         <button @click="addPerk" type="button" class="ml-1 mb-1 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add</button>
-        <div class="w-5/6">
+        <div class="w-full md:w-5/6">
             <table>
                 <thead>
                     <tr>
@@ -70,8 +70,8 @@
             </table>
         </div>
         <img className="pt-2 mb-2 " src="@/assets/biography_heading.png" />
-        <div class="w-5/6">
-            <textarea class="w-full" id="biography" v-model="biography"></textarea>
+        <div class="w-full md:w-5/6">
+            <textarea class="w-full" id="biography" v-model="biography" @input="updateBiography"></textarea>
         </div>
     </div>
 
@@ -94,7 +94,7 @@ const props = defineProps({
         required: true
     },
 });
-const emit = defineEmits(['addAmmo', 'updateAmmo', 'addGear', 'updateGear', 'addPerk', 'updatePerk']);
+const emit = defineEmits(['addAmmo', 'updateAmmo', 'addGear', 'updateGear', 'addPerk', 'updatePerk', 'updateBiography']);
 const addAmmo = () => {
 // add a new empty ammo object to the ammo array
 const newAmmo = {
@@ -173,4 +173,12 @@ const updateGear = {
 
 emit('updateGear', updateGear);
 };
+
+
+const updateBiography = () => {
+
+emit('updateBiography', biography.target.value);
+
+};
+
 </script>
