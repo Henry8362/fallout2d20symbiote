@@ -6,7 +6,7 @@
     
     <div class="grid grid-cols-1  gap-2 md:grid-cols-2 mt-2">
     <SheetSkills :skills="skills" @update-skill="handleUpdateSkill" />
-    <SheetCombat className="w-full p-1 bg-gray-300 bg-opacity-80	 border-2 rounded-lg" :right_arm_stats="right_arm_stats" :right_leg_stats="right_leg_stats" :torso_stats="torso_stats" :left_arm_stats="left_arm_stats" :left_leg_stats="left_leg_stats" :head_stats="head_stats" :meleeDamage="meleeDamage"  @update-meleeDamage="handlemeleeDamage" :defense="defense" @update-defense="handleUpdateDefense" :initiative="initiative" @update-initiative="handleUpdateInitiative"  />
+    <SheetCombat className="w-full p-1 bg-gray-300 bg-opacity-80	 border-2 rounded-lg" @update-stats="handleUpdateCombatStats" :max_hp="maxhp" @update-maxHP="handleUpdateMaxHP" :current_hp="current_hp" @update-currentHP="handleCurrentHP" :poison_dr="poison_dr" @update-poisonDR="handlePoisonDR" :right_arm_stats="right_arm_stats" :right_leg_stats="right_leg_stats" :torso_stats="torso_stats" :left_arm_stats="left_arm_stats" :left_leg_stats="left_leg_stats" :head_stats="head_stats" :meleeDamage="meleeDamage"  @update-meleeDamage="handlemeleeDamage" :defense="defense" @update-defense="handleUpdateDefense" :initiative="initiative" @update-initiative="handleUpdateInitiative"  />
     </div>
     <SheetWeapons :weapons="weapons" @update-weapons="handleUpdateWeapons" />
     <SheetBiography :caps="caps" @update-caps="handleUpdateCaps" :ammo="ammo" @add-ammo="handleAddAmmo" @update-ammo="handleUpdateAmmo" :gear="gear" @add-gear="handleAddGear" @update-gear="handleUpdateGear" :perks="perks" @add-perk="handleAddPerk" @update-perk="handleUpdatePerk" :biography="biography" @update-biography="handleUpdateBiography" />
@@ -64,6 +64,9 @@ onBeforeMount(() => {
       right_arm_stats.value = parsedData.right_arm_stats;
       right_leg_stats.value = parsedData.right_leg_stats;
       weapons.value = parsedData.weapons;
+      max_hp.value = parsedData.max_hp;
+      current_hp.value = parsedData.current_hp;
+      poison_dr.value = parsedData.poison_dr;
 
       }
 
@@ -271,35 +274,57 @@ const handleUpdateSkill = (index, value, type) => {
 const meleeDamage = ref(0);
 const defense = ref(0);
 const initiative = ref(0);
+const current_hp = ref(0);
+const max_hp = ref(0);
+const poison_dr = ref(0);
 const left_arm_stats = ref({
   label: 'Left Arm (9-11)',
+  label_id: 'left_arm',
   phys_dr: 0,
-  en_dr: 0
+  en_dr: 0,
+  hp: 0,
+  rad_dr: 0
 })
 const left_leg_stats = ref({
   label: 'Left Leg (15-17)',
+  label_id: 'left_leg',
   phys_dr: 0,
-  en_dr: 0
+  en_dr: 0,
+  hp: 0,
+  rad_dr: 0
+
 })
 const head_stats = ref({
   label: 'Head (1-2)',
+  label_id: 'head',
   phys_dr: 0,
-  en_dr: 0
+  en_dr: 0,
+  hp: 0,
+  rad_dr: 0
 })
 const torso_stats = ref({
   label: 'Torso (3-8)',
+  label_id: 'torso',
   phys_dr: 0,
-  en_dr: 0
+  en_dr: 0,
+  hp: 0,
+  rad_dr: 0
 })
 const right_arm_stats = ref({
   label: 'Right Arm (12-14)',
+  label_id: 'right_arm',
   phys_dr: 0,
-  en_dr: 0
+  en_dr: 0,
+  hp: 0,
+  rad_dr: 0
 })
 const right_leg_stats = ref({
   label: 'Right Leg (18-20)',
+  label_id: 'right_leg',
   phys_dr: 0,
-  en_dr: 0
+  en_dr: 0,
+  hp: 0,
+  rad_dr: 0
 })
 
 
@@ -315,11 +340,48 @@ const handleUpdateInitiative = (newInitiative) => {
   initiative.value = newInitiative;
 };
 
+const handleUpdateMaxHP = (newMaxHP) => {
+  max_hp.value = newMaxHP;
+};
 
-watch([meleeDamage, defense, initiative, left_arm_stats, left_leg_stats, head_stats, torso_stats, right_arm_stats, right_leg_stats ], (updatedProp) => {
+const handleCurrentHP = (newCurrentHP) => {
+  current_hp.value = newCurrentHP;
+};
+
+const handlePoisonDR = (newPoisonDR) => {
+  console.log("new poison dr:" + newPoisonDR);
+  poison_dr.value = newPoisonDR;
+};
+
+const handleUpdateCombatStats = (newStats, stat, value) => {
+  console.log("new stats:" + newStats);
+  switch(newStats.label_id) {
+    case 'left_arm':
+      left_arm_stats.value[stat] = value;
+      break;
+    case 'left_leg':
+      left_leg_stats.value[stat] = value;
+      break;
+    case 'head':
+      console.log(head_stats.value[stat] + "being updated to" + value);
+      head_stats.value[stat] = value;
+      break;
+    case 'torso':
+      torso_stats.value[stat] = value;
+      break;
+    case 'right_arm':
+      right_arm_stats.value[stat] = value;
+      break;
+    case 'right_leg':
+      right_leg_stats.value[stat] = value;
+      break;
+  }
+};
+
+watch([current_hp,max_hp,poison_dr,meleeDamage, defense, initiative, left_arm_stats.value, left_leg_stats.value, head_stats.value, torso_stats.value, right_arm_stats.value, right_leg_stats.value ], (updatedProp) => {
   console.log("updated prop" + updatedProp);
   handlePropUpdate(updatedProp);
-});
+}, { deep: true });
 
 
 
@@ -366,6 +428,9 @@ const prepareBlobStructure = () => {
   meleeDamage: meleeDamage.value,
   defense: defense.value,
   initiative: initiative.value,
+  max_hp: max_hp.value,
+  current_hp: current_hp.value,
+  poison_dr: poison_dr.value,
   left_arm_stats: left_arm_stats.value,
   left_leg_stats: left_leg_stats.value,
   head_stats: head_stats.value,

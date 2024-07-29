@@ -17,33 +17,34 @@
                 </div>
             </div>
         </div>
-        <div class="grid grid-cols-3 gap-4 mt-1">
+        <div class="flex gap-2">
+            <div class="flex">
+                <label for="poison-dr" class="w-2/4 pl-1 bg-black text-white content-center font-bold">Poison DR:</label>
+                    <input type="number" id="poison-dr" class="w-2/4 content-center" :value="poison_dr" @input="updatePoisonDR" />
+            </div>
+                <div class="flex">
+                    <label for="max-hp" class="w-3/6 bg-black text-white content-center pl-1">Max HP</label>
+                    <input type="number" id="max-hp" class="w-3/6" :value="max_hp" @input="updateMaxHP" />
+                </div>
             <div>
                 <div class="flex">
-                    <label for="poison-dr" class="w-2/4 pl-1 bg-black text-white content-center font-bold">Poison DR:</label>
-                    <input type="text" id="poison-dr" class="w-2/4 content-center" :value="poison_dr" @input="updatePoisonDR" />
-                </div>
-                <SheetCombatBodyPart class="mt-1" :stats="left_arm_stats" />
-                <SheetCombatBodyPart class="mt-1" :stats="left_leg_stats" />
-
-            </div>
-            <div>
-                <SheetCombatBodyPart class="mt-1" :stats="head_stats" />
-                <SheetCombatBodyPart class="mt-1" :stats="torso_stats" />
-
-
-            </div>
-            <div>
-                <div class="flex p-1">
-                    <label for="max-hp" class="w-3/6 bg-black text-white content-center pl-1">Max HP</label>
-                    <input type="text" id="max-hp" class="w-3/6" v-model="max_hp" />
                     <label for="current-hp" class="w-3/6 bg-black text-white content-center pl-1">Current HP</label>
-                    <input type="text" id="current-hp" class="w-3/6" v-model="current_hp" />
-
-
+                    <input type="text" id="current-hp" class="w-3/6" :value="current_hp" @input="updateCurrentHP" />
                 </div>
-                <SheetCombatBodyPart class="mt-1" :stats="right_arm_stats" />
-                <SheetCombatBodyPart class="mt-1" :stats="right_leg_stats" />
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 mt-1">
+            <div class="flex flex-col">
+                <SheetCombatBodyPart class="mt-1" :stats="head_stats" @update-stats="handleStats" />
+                <SheetCombatBodyPart class="mt-1" :stats="left_arm_stats" @update-stats="handleStats" />
+                <SheetCombatBodyPart class="mt-1" :stats="left_leg_stats"  @update-stats="handleStats" />
+
+            </div>
+            <div class="flex flex-col">
+                <SheetCombatBodyPart class="mt-1" :stats="torso_stats" @update-stats="handleStats" />
+                <SheetCombatBodyPart class="mt-1" :stats="right_arm_stats" @update-stats="handleStats" />
+                <SheetCombatBodyPart class="mt-1" :stats="right_leg_stats" @update-stats="handleStats" />
+
             </div>
         </div>
     </div>
@@ -66,33 +67,45 @@ defineProps({
         type: Number,
         required: true
     },
+    poison_dr: {
+        type: Number,
+        required: true
+    },
+    max_hp: {
+        type: Number,
+        required: true
+    },
+    current_hp: {
+        type: Number,
+        required: true
+    },
     left_arm_stats: {
-        type: Array,
+        type: Object,
         required: true
     },
     left_leg_stats: {
-        type: Array,
+        type: Object,
         required: true
     },
     head_stats: {
-        type: Array,
+        type: Object,
         required: true
     },
     torso_stats: {
-        type: Array,
+        type: Object,
         required: true
     },
     right_arm_stats: {
-        type: Array,
+        type: Object,
         required: true
     },
     right_leg_stats: {
-        type: Array,
+        type: Object,
         required: true
     },
 });
 
-const emit = defineEmits(['updateMeleeDamage', 'updateDefense', 'updateInitiative']);
+const emit = defineEmits(['updateMeleeDamage', 'updateDefense', 'updateInitiative', 'updatePoisonDR', 'updateMaxHP', 'updateCurrentHP']);
 
 const updateMeleeDamage = (newMeleeDamage) => {
     const meleeDamage = newMeleeDamage.target.value;
@@ -109,5 +122,24 @@ const updateInitiative = (newInitiative) => {
     emit('updateInitiative', initiative);
 };
 
+const updatePoisonDR = (newPoisonDR) => {
+    const poison_dr = newPoisonDR.target.value;
+    emit('updatePoisonDR', poison_dr);
+};
+
+const updateMaxHP = (newMaxHP) => {
+    const max_hp = newMaxHP.target.value;
+    emit('updateMaxHP', max_hp);
+};
+
+const updateCurrentHP = (newCurrentHP) => {
+    const current_hp = newCurrentHP.target.value;
+    emit('updateCurrentHP', current_hp);
+};
+
+const handleStats = (newStats, stat, value) => {
+    console.log('handleStats');
+    emit('updateStats', newStats, stat, value);
+};
 
 </script>
