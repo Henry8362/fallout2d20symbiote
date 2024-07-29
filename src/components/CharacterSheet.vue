@@ -1,15 +1,15 @@
 <template>
 <div>
-  <form className="container mx-auto">
-    <SheetHead :charname="charname" @update-charname="handleUpdateCharName" :xp_earned="xp_earned" @update-XpEarned="handlexpEarned" :xp_next_level="xp_next_level" @update-XpNextLevel="handlexpNextLevel" :char_origin="char_origin" @update-charOrigin="handleCharOrigin" :level="level" @update-level="handleLevel"  />
+  <form className="container mx-auto p-1">
+    <SheetHead :charname="charname" @update-charName="handleUpdateCharName" :xp_earned="xp_earned" @update-XpEarned="handlexpEarned" :xp_next_level="xp_next_level" @update-XpNextLevel="handlexpNextLevel" :char_origin="char_origin" @update-charOrigin="handleCharOrigin" :level="level" @update-level="handleLevel"  />
     <SheetSpecials :specialStats="specialStats" @update-special="handleUpdateSpecials" />
     
     <div class="grid grid-cols-1  gap-2 md:grid-cols-2 mt-2">
     <SheetSkills :skills="skills" @update-skill="handleUpdateSkill" />
-    <SheetCombat className="w-full p-1 bg-gray-300 bg-opacity-80	 border-2 rounded-lg" :right_arm_stats="right_arm_stats" :right_leg_stats="right_leg_stats" :torso_stats="torso_stats" :left_arm_stats="left_arm_stats" :left_leg_stats="left_leg_stats" :head_stats="head_stats" :meleeDamage="meleeDamage" :defense="defense" :initiative="initiative"  />
+    <SheetCombat className="w-full p-1 bg-gray-300 bg-opacity-80	 border-2 rounded-lg" :right_arm_stats="right_arm_stats" :right_leg_stats="right_leg_stats" :torso_stats="torso_stats" :left_arm_stats="left_arm_stats" :left_leg_stats="left_leg_stats" :head_stats="head_stats" :meleeDamage="meleeDamage"  @update-meleeDamage="handlemeleeDamage" :defense="defense" @update-defense="handleUpdateDefense" :initiative="initiative" @update-initiative="handleUpdateInitiative"  />
     </div>
     <SheetWeapons :weapons="weapons" @update-weapons="handleUpdateWeapons" />
-    <SheetBiography :caps="caps" :ammo="ammo" @add-ammo="handleAddAmmo" @update-ammo="handleUpdateAmmo" :gear="gear" @add-gear="handleAddGear" @update-gear="handleUpdateGear" :perks="perks" @add-perk="handleAddPerk" @update-perk="handleUpdatePerk" :biography="biography" @update-biography="handleUpdateBiography" />
+    <SheetBiography :caps="caps" @update-caps="handleUpdateCaps" :ammo="ammo" @add-ammo="handleAddAmmo" @update-ammo="handleUpdateAmmo" :gear="gear" @add-gear="handleAddGear" @update-gear="handleUpdateGear" :perks="perks" @add-perk="handleAddPerk" @update-perk="handleUpdatePerk" :biography="biography" @update-biography="handleUpdateBiography" />
 
 </form> 
 
@@ -118,7 +118,7 @@ const handleLevel = (newLevel) => {
 };
 
 
-/* SHEET SPECIALS STUFF */
+/* SHEET SPECIALS STUFF - DONE */
 
 const specialStats = ref([
     { name: 'Strength', value: 5, label: 'STR' },
@@ -161,7 +161,7 @@ const biography = ref("");
 watch([caps, ammo, gear, perks, biography], (updatedProp) => {
   console.log("updated prop" + updatedProp);
   handlePropUpdate(updatedProp);
-});
+}, { deep: true });
 
 const handleAddAmmo = (newAmmo) => {
   ammo.value.push(newAmmo);
@@ -169,12 +169,15 @@ const handleAddAmmo = (newAmmo) => {
 
 const handleUpdateAmmo = (updateAmmo) => {
   // get the index of the ammo object in the array
-  const index = ammo.value.findIndex(updateAmmo => updateAmmo.caliber === updateAmmo.caliber);
+  const index = ammo.value.findIndex(ammo => ammo.caliber === updateAmmo.caliber);
+  const updatedAmmo = ammo.value.map((ammo, i) =>
+      i === index ? { ...ammo, quantity: updateAmmo.quantity } : ammo
+    );
   console.log("values:" + updateAmmo.caliber + updateAmmo.quantity);
-  // update it with the new ammo object values
-  ammo.value[index] = updateAmmo;
+  ammo.value = updatedAmmo;
 
-  console.log(ammo.value)
+
+
 };
 
 
@@ -184,7 +187,7 @@ const handleAddGear = (newGear) => {
 
 const handleUpdateGear = (updateGear) => {
   // get the index of the gear object in the array
-  const index = gear.value.findIndex(updateGear => updateGear.name === updateGear.name);
+  const index = gear.value.findIndex(gear => gear.name === updateGear.name);
   console.log("values:" + updateGear.name + updateGear.quantity);
   // update it with the new gear object values
   gear.value[index] = updateGear;
@@ -212,6 +215,10 @@ const handleUpdateBiography = (newBiography) => {
   biography.value = newBiography;
 };
 
+const handleUpdateCaps = (newCaps) => {
+  caps.value = newCaps;
+};
+
 
 // list of skills for SheetSkills component
 const skills = ref([
@@ -235,19 +242,20 @@ const skills = ref([
 ])
 
 watch([skills], (updatedProp) => {
-  console.log("updated prop" + updatedProp);
   handlePropUpdate(updatedProp);
-});
+}, {deep: true});
 
-const handleUpdateSkill = (newSkill) => {
-  // get the index of the skill object in the array
-  const index = skills.value.findIndex(newSkill => newSkill.name === newSkill.name);
+const handleUpdateSkill = (index, value, type) => {
+
+
   // update it with the new skill object values
-  if(newSkill.type === 'T') {
-    skills.value[index].tagged = newSkill.value;
+  if(type === 'T') {
+    skills.value[index].tagged = value;
   } else {
-    skills.value[index].rank = newSkill.value;
+    console.log([skills.value[index]]);
+    skills.value[index].rank = value;
   }
+
   console.log(skills.value)
 
 };
@@ -294,10 +302,30 @@ const right_leg_stats = ref({
   en_dr: 0
 })
 
+
+const handlemeleeDamage = (newMeleeDamage) => {
+  meleeDamage.value = newMeleeDamage;
+};
+
+const handleUpdateDefense = (newDefense) => {
+  defense.value = newDefense;
+};
+
+const handleUpdateInitiative = (newInitiative) => {
+  initiative.value = newInitiative;
+};
+
+
 watch([meleeDamage, defense, initiative, left_arm_stats, left_leg_stats, head_stats, torso_stats, right_arm_stats, right_leg_stats ], (updatedProp) => {
   console.log("updated prop" + updatedProp);
   handlePropUpdate(updatedProp);
 });
+
+
+
+
+
+
 
 /* Handlers and watchers for weapon section */
 

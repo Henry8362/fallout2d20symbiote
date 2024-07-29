@@ -3,7 +3,7 @@
     <div>
         <img className="pt-2 mb-2 " src="@/assets/caps_heading.png" />
         <div class="w-full md:w-3/6">
-            <input type="text" id="caps" class="w-2/6" v-model="caps" />
+            <input type="text" id="caps" class="w-2/6" :value="props.caps" @input="updateCaps" />
         </div>
         <img className="pt-2 mb-2 " src="@/assets/ammo_heading.png" />
         <button @click="addAmmo" type="button" class="ml-1 mb-1 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add</button>
@@ -17,8 +17,8 @@
                 </thead>
                 <tbody>
                     <tr v-for="ammo in props.ammo" :key="ammo.name" class=" font-bold text-lg bg-white text-black p-1 border-b-2 border-dotted border-gray-400" :class="{ 'border-b-0': ammo === ammo[ammo.length - 1] }">
-                        <td><input type="text" v-model="ammo.caliber" @input="updateAmmo"></td>
-                        <td><input type="number" v-model="ammo.quantity" @input="updateAmmo"></td>
+                        <td><input type="text" v-model="ammo.caliber" @input="updateAmmo(ammo.caliber, ammo.quantity)"></td>
+                        <td><input type="number" v-model="ammo.quantity" @input="updateAmmo(ammo.caliber, ammo.quantity)"></td>
                     </tr>
                 </tbody>
 
@@ -60,7 +60,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="perk in perks" :key="perk.name" class=" font-bold text-lg bg-white text-black p-1 border-b-2 border-dotted border-gray-400" :class="{ 'border-b-0': perk === perk[perk.length - 1] }">
+                    <tr v-for="perk in props.perks" :key="perk.name" class=" font-bold text-lg bg-white text-black p-1 border-b-2 border-dotted border-gray-400" :class="{ 'border-b-0': perk === perk[perk.length - 1] }">
                         <td><input type="text" v-model="perk.name" @input="updatePerk"></td>
                         <td><input type="number" v-model="perk.rank" @input="updatePerk"></td>
                         <td><input type="text" v-model="perk.effect" @input="updatePerk"></td>
@@ -71,7 +71,7 @@
         </div>
         <img className="pt-2 mb-2 " src="@/assets/biography_heading.png" />
         <div class="w-full md:w-5/6">
-            <textarea class="w-full" id="biography" v-model="biography" @input="updateBiography"></textarea>
+            <textarea class="w-full" id="biography" :value="props.biography" @input="updateBiography"></textarea>
         </div>
     </div>
 
@@ -93,8 +93,16 @@ const props = defineProps({
         type: Array,
         required: true
     },
+    biography: {
+        type: String,
+        required: true
+    },
+    caps: {
+        type: Number,
+        required: true
+    },
 });
-const emit = defineEmits(['addAmmo', 'updateAmmo', 'addGear', 'updateGear', 'addPerk', 'updatePerk', 'updateBiography']);
+const emit = defineEmits(['addAmmo', 'updateAmmo', 'addGear', 'updateGear', 'addPerk', 'updatePerk', 'updateBiography','updateCaps']);
 const addAmmo = () => {
 // add a new empty ammo object to the ammo array
 const newAmmo = {
@@ -123,7 +131,7 @@ const addPerk = () => {
 const newPerk = {
     name: '',
     rank: 0,
-    effect: ''
+    effect: '',
 };
 emit('addPerk', newPerk);
 };
@@ -145,15 +153,12 @@ emit('updatePerk', updatePerk);
 
 
 
-const updateAmmo = () => {
-console.log('updateAmmo');
-// get the index of the ammo object in the array
-const index = props.ammo.findIndex(ammo => ammo.caliber === ammo.caliber);
-console.log(index);
+const updateAmmo = (caliber, quantity) => {
+
 // emit the caliber and quantity to the parent component
 const updateAmmo = {
-    caliber: props.ammo[index].caliber,
-    quantity: props.ammo[index].quantity
+    caliber: caliber,
+    quantity: quantity
 };
 
 emit('updateAmmo', updateAmmo);
@@ -175,10 +180,15 @@ emit('updateGear', updateGear);
 };
 
 
-const updateBiography = () => {
+const updateBiography = (biography) => {
 
 emit('updateBiography', biography.target.value);
 
+};
+
+
+const updateCaps = (caps) => { 
+emit('updateCaps', caps.target.value);
 };
 
 </script>

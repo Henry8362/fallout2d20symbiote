@@ -11,9 +11,10 @@ body {
 
 .root-bg {
 
-    background-image: url(altbg2.jpg);
+    /*background-image: url(altbg2.jpg);
     background-size: cover;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat; */
+    background-color: #001423;
     
 }
 
