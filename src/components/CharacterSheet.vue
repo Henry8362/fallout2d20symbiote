@@ -6,7 +6,7 @@
     
     <div class="grid grid-cols-1  gap-2 md:grid-cols-2 mt-2">
     <SheetSkills :skills="skills" @update-skill="handleUpdateSkill" />
-    <SheetCombat className="w-full p-1 bg-gray-300 bg-opacity-80	 border-2 rounded-lg" @update-stats="handleUpdateCombatStats" :max_hp="maxhp" @update-maxHP="handleUpdateMaxHP" :current_hp="current_hp" @update-currentHP="handleCurrentHP" :poison_dr="poison_dr" @update-poisonDR="handlePoisonDR" :right_arm_stats="right_arm_stats" :right_leg_stats="right_leg_stats" :torso_stats="torso_stats" :left_arm_stats="left_arm_stats" :left_leg_stats="left_leg_stats" :head_stats="head_stats" :meleeDamage="meleeDamage"  @update-meleeDamage="handlemeleeDamage" :defense="defense" @update-defense="handleUpdateDefense" :initiative="initiative" @update-initiative="handleUpdateInitiative"  />
+    <SheetCombat className="w-full p-1 bg-gray-300 bg-opacity-80	 border-2 rounded-lg" @update-stats="handleUpdateCombatStats" :max_hp="max_hp" @update-maxHP="handleUpdateMaxHP" :current_hp="current_hp" @update-currentHP="handleCurrentHP" :poison_dr="poison_dr" @update-poisonDR="handlePoisonDR" :right_arm_stats="right_arm_stats" :right_leg_stats="right_leg_stats" :torso_stats="torso_stats" :left_arm_stats="left_arm_stats" :left_leg_stats="left_leg_stats" :head_stats="head_stats" :meleeDamage="meleeDamage"  @update-meleeDamage="handlemeleeDamage" :defense="defense" @update-defense="handleUpdateDefense" :initiative="initiative" @update-initiative="handleUpdateInitiative"  />
     </div>
     <SheetWeapons :weapons="weapons" @update-weapons="handleUpdateWeapons" />
     <SheetBiography :caps="caps" @update-caps="handleUpdateCaps" :ammo="ammo" @add-ammo="handleAddAmmo" @update-ammo="handleUpdateAmmo" :gear="gear" @add-gear="handleAddGear" @update-gear="handleUpdateGear" :perks="perks" @add-perk="handleAddPerk" @update-perk="handleUpdatePerk" :biography="biography" @update-biography="handleUpdateBiography" />
@@ -266,7 +266,7 @@ const handleUpdateSkill = (index, value, type) => {
 
 
 
-/* COMBAT SECTION */
+/* COMBAT SECTION - Complete */
 
 
 
@@ -354,8 +354,9 @@ const handlePoisonDR = (newPoisonDR) => {
 };
 
 const handleUpdateCombatStats = (newStats, stat, value) => {
-  console.log("new stats:" + newStats);
-  switch(newStats.label_id) {
+  console.log("new stats on parent:" + newStats, stat, value);
+  console.log(newStats);
+  switch(newStats) {
     case 'left_arm':
       left_arm_stats.value[stat] = value;
       break;
@@ -363,7 +364,6 @@ const handleUpdateCombatStats = (newStats, stat, value) => {
       left_leg_stats.value[stat] = value;
       break;
     case 'head':
-      console.log(head_stats.value[stat] + "being updated to" + value);
       head_stats.value[stat] = value;
       break;
     case 'torso':
@@ -378,8 +378,8 @@ const handleUpdateCombatStats = (newStats, stat, value) => {
   }
 };
 
-watch([current_hp,max_hp,poison_dr,meleeDamage, defense, initiative, left_arm_stats.value, left_leg_stats.value, head_stats.value, torso_stats.value, right_arm_stats.value, right_leg_stats.value ], (updatedProp) => {
-  console.log("updated prop" + updatedProp);
+watch([current_hp,max_hp,poison_dr,meleeDamage, defense, initiative, left_arm_stats, left_leg_stats, head_stats, torso_stats, right_arm_stats, right_leg_stats ], (updatedProp) => {
+  console.log("Watcher triggered for combat stats");
   handlePropUpdate(updatedProp);
 }, { deep: true });
 
@@ -404,7 +404,9 @@ const handlePropUpdate = (updatedProp) => {
   if (typeof TS !== 'undefined' && TS.localStorage && TS.localStorage.campaign) {
     console.log("updated prop" + updatedProp);
     const data = prepareBlobStructure(updatedProp);
+    console.log("updating the talespire blob");
     TS.localStorage.campaign.setBlob(JSON.stringify(data));
+    console.log("updated the talespire blob");
   } else {
     console.error('TS or required methods are not available');
   }

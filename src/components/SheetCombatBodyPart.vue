@@ -6,22 +6,22 @@
     <div class="flex flex-col">
                 <div class="grid grid-cols-2 bg-green-300">
                     <div className="flex">
-                        <label for="left-arm-phys-dr" className="w-4/6 content-center pl-1">Phys. DR:</label>
-                        <input type="number" id="left-arm-phys-dr" className="w-2/6" :="props.stats.phys_dr" @input="updateStats('phys_dr', $event)" />
+                        <label for="left-arm-phys-dr" className="w-3/6 content-center pl-1">Phys. DR:</label>
+                        <input type="number" id="left-arm-phys-dr" className="w-3/6" :value="props.stats.phys_dr" @input="updateStats('phys_dr', $event)" />
                     </div>
                     <div className="flex">
-                        <label for="left-arm-rad-dr" className="w-4/6 content-center pl-1">Rad. DR:</label>
-                        <input type="number" id="left-arm-rad-dr" className="w-2/6" :="props.stats.rad_dr" @input="updateState('rad_dr', $event)" />
+                        <label for="left-arm-rad-dr" className="w-3/6 content-center pl-1">Rad. DR:</label>
+                        <input type="number" id="left-arm-rad-dr" className="w-3/6" :value="props.stats.rad_dr" @input="updateStats('rad_dr', $event)" />
                     </div>
                 </div>
         <div class="grid grid-cols-2 bg-green-100">
             <div className="flex">
-                <label for="left-arm-en-dr" className="w-4/6 content-center pl-1">En. DR:</label>
-                <input type="number" id="left-arm-en-dr" className="w-2/6" :="props.stats.en_dr" @input="updateStats('en_dr', $event)" />
+                <label for="left-arm-en-dr" className="w-3/6 content-center pl-1">En. DR:</label>
+                <input type="number" id="left-arm-en-dr" className="w-3/6" :value="props.stats.en_dr" @input="updateStats('en_dr', $event)" />
             </div>
             <div className="flex">
-                <label for="left-arm-hp" className="w-4/6 content-center pl-1">HP:</label>
-                <input type="number" id="left-arm-hp" className="w-2/6" :="props.stats.hp" @input="updateStats('hp', $event)" />
+                <label for="left-arm-hp" className="w-3/6 content-center pl-1">HP:</label>
+                <input type="number" id="left-arm-hp" className="w-3/6" :value="props.stats.hp" @input="updateStats('hp', $event)" />
             </div>
         </div>
     </div>
@@ -53,8 +53,10 @@ const emit = defineEmits(['updateStats']);
 
 const updateStats = (changedStat, event) => {
     
-
-    emit('updateStats', props.stats, changedStat, event.target.value);
+    console.log('updateStats on SheetCombatBodyPart.vue');
+    console.log(props.stats, changedStat, event.target.value);
+    const label = props.stats.label_id;
+    emit('updateStats', label, changedStat, event.target.value);
 
 }
 

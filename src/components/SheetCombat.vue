@@ -138,7 +138,8 @@ const updateCurrentHP = (newCurrentHP) => {
 };
 
 const handleStats = (newStats, stat, value) => {
-    console.log('handleStats');
+    console.log('handleStats on SheetCombat.vue');
+    console.log(newStats, stat, value);
     emit('updateStats', newStats, stat, value);
 };
 
