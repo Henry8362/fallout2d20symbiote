@@ -1,5 +1,5 @@
 <template>
-  <div class="root-bg">
+  <div class="root-bg max-w-full">
     <div class="container mx-auto" v-if="initialized">
       <img class="pt-4 mb-2" src="@/assets/sheet_title_white.png" />
       <CharacterSheet/>
@@ -14,7 +14,7 @@
 import { ref } from 'vue';
 import CharacterSheet from './components/CharacterSheet.vue'
 
-const initialized = ref(false);
+const initialized = ref(true);
 
 
 function onStateChangeEvent(event) {

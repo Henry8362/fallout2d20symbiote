@@ -1,5 +1,5 @@
 <template>
-<div class="grid md:grid-cols-2 gap-2">
+<div class="grid w-full md:grid-cols-2 gap-2">
     <div>
         <img className="pt-2 mb-2 " src="@/assets/caps_heading.png" />
         <div class="w-full md:w-3/6">
@@ -13,12 +13,16 @@
                     <tr>
                         <th class="bg-black text-white text-start text-lg">CALIBER</th>
                         <th class="bg-black text-white text-start text-lg">QUANTITY</th>
+                        <th class="bg-black text-white text-start text-lg">DELETE</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="ammo in props.ammo" :key="ammo.name" class=" font-bold text-lg bg-white text-black p-1 border-b-2 border-dotted border-gray-400" :class="{ 'border-b-0': ammo === ammo[ammo.length - 1] }">
                         <td><input type="text" v-model="ammo.caliber" @input="updateAmmo(ammo.caliber, ammo.quantity)"></td>
                         <td><input type="number" v-model="ammo.quantity" @input="updateAmmo(ammo.caliber, ammo.quantity)"></td>
+                        <td>
+                            <button @click="removeAmmo(ammo)" type="button" class="ml-1 mb-1 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Remove</button>
+                        </td>
                     </tr>
                 </tbody>
 
@@ -34,6 +38,7 @@
                         <th class="bg-black text-white text-start text-lg">AMOUNT</th>
                         <th class="bg-black text-white text-start text-lg">ITEM</th>
                         <th class="bg-black text-white text-start text-lg">LBS.</th>
+                        <th class="bg-black text-white text-start text-lg">DELETE</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,6 +46,9 @@
                         <td><input type="number" v-model="gear.quantity" @input="updateGear"></td>
                         <td><input type="text" v-model="gear.name" @input="updateGear"></td>
                         <td><input type="number" v-model="gear.weight" @input="updateGear"></td>
+                        <td>
+                            <button @click="removeGear(gear)" type="button" class="ml-1 mb-1 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Remove</button>
+                        </td>
                     </tr>
                 </tbody>
 
@@ -57,6 +65,7 @@
                         <th class="bg-black text-white text-start text-lg">NAME</th>
                         <th class="bg-black text-white text-start text-lg">RANK</th>
                         <th class="bg-black text-white text-start text-lg">EFFECT</th>
+                        <th class="bg-black text-white text-start text-lg">DELETE</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,6 +73,9 @@
                         <td><input type="text" v-model="perk.name" @input="updatePerk"></td>
                         <td><input type="number" v-model="perk.rank" @input="updatePerk"></td>
                         <td><input type="text" v-model="perk.effect" @input="updatePerk"></td>
+                        <td>
+                            <button @click="removePerk(perk)" type="button" class="ml-1 mb-1 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Remove</button>
+                        </td>
                     </tr>
                 </tbody>
 
@@ -102,7 +114,7 @@ const props = defineProps({
         required: true
     },
 });
-const emit = defineEmits(['addAmmo', 'updateAmmo', 'addGear', 'updateGear', 'addPerk', 'updatePerk', 'updateBiography','updateCaps']);
+const emit = defineEmits(['addAmmo', 'updateAmmo', 'removeAmmo', 'addGear', 'updateGear', 'removeGear', 'addPerk', 'updatePerk','removePark', 'updateBiography','updateCaps']);
 const addAmmo = () => {
 // add a new empty ammo object to the ammo array
 const newAmmo = {
@@ -190,5 +202,26 @@ emit('updateBiography', biography.target.value);
 const updateCaps = (caps) => { 
 emit('updateCaps', caps.target.value);
 };
+
+
+const removeAmmo = (ammo) => {
+// get the index of the ammo object in the array
+const index = props.ammo.findIndex(a => a.caliber === ammo.caliber);
+emit('removeAmmo', index);
+};
+
+const removeGear = (gear) => {
+// get the index of the ammo object in the array
+const index = props.gear.findIndex(g => g.name === gear.name);
+emit('removeGear', index);
+};
+
+const removePerk = (perk) => {
+// get the index of the ammo object in the array
+const index = props.perks.findIndex(p => p.name === perk.name);
+emit('removePerk', index);
+};
+
+
 
 </script>

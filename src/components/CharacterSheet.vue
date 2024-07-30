@@ -1,6 +1,6 @@
 <template>
 <div>
-  <form className="container mx-auto p-1">
+  <form className="container max-w-full mx-auto p-1">
     <SheetHead :charname="charname" @update-charName="handleUpdateCharName" :xp_earned="xp_earned" @update-XpEarned="handlexpEarned" :xp_next_level="xp_next_level" @update-XpNextLevel="handlexpNextLevel" :char_origin="char_origin" @update-charOrigin="handleCharOrigin" :level="level" @update-level="handleLevel"  />
     <SheetSpecials :specialStats="specialStats" @update-special="handleUpdateSpecials" />
     
@@ -8,9 +8,8 @@
     <SheetSkills :skills="skills" @update-skill="handleUpdateSkill" />
     <SheetCombat className="w-full p-1 bg-gray-300 bg-opacity-80	 border-2 rounded-lg" @update-stats="handleUpdateCombatStats" :max_hp="max_hp" @update-maxHP="handleUpdateMaxHP" :current_hp="current_hp" @update-currentHP="handleCurrentHP" :poison_dr="poison_dr" @update-poisonDR="handlePoisonDR" :right_arm_stats="right_arm_stats" :right_leg_stats="right_leg_stats" :torso_stats="torso_stats" :left_arm_stats="left_arm_stats" :left_leg_stats="left_leg_stats" :head_stats="head_stats" :meleeDamage="meleeDamage"  @update-meleeDamage="handlemeleeDamage" :defense="defense" @update-defense="handleUpdateDefense" :initiative="initiative" @update-initiative="handleUpdateInitiative"  />
     </div>
-    <SheetWeapons :weapons="weapons" @update-weapons="handleUpdateWeapons" />
-    <SheetBiography :caps="caps" @update-caps="handleUpdateCaps" :ammo="ammo" @add-ammo="handleAddAmmo" @update-ammo="handleUpdateAmmo" :gear="gear" @add-gear="handleAddGear" @update-gear="handleUpdateGear" :perks="perks" @add-perk="handleAddPerk" @update-perk="handleUpdatePerk" :biography="biography" @update-biography="handleUpdateBiography" />
-
+    <SheetWeapons :weapons="weapons" @update-weapons="handleUpdateWeapons" @remove-weapons="handleRemoveWeapons" />
+    <SheetBiography :caps="caps" @update-caps="handleUpdateCaps" :ammo="ammo" @add-ammo="handleAddAmmo" @update-ammo="handleUpdateAmmo" @remove-ammo="handleRemoveAmmo" :gear="gear" @add-gear="handleAddGear" @update-gear="handleUpdateGear" @remove-gear="handleRemoveGear" :perks="perks" @add-perk="handleAddPerk" @update-perk="handleUpdatePerk" @remove-perk="handleRemovePerk" :biography="biography" @update-biography="handleUpdateBiography" />
 </form> 
 
 </div>
@@ -183,6 +182,12 @@ const handleUpdateAmmo = (updateAmmo) => {
 
 };
 
+const handleRemoveAmmo = (index) => {
+  console.log("index:" + index);
+  ammo.value.splice(index, 1);
+
+};
+
 
 const handleAddGear = (newGear) => {
   gear.value.push(newGear);
@@ -199,6 +204,13 @@ const handleUpdateGear = (updateGear) => {
 
 };
 
+
+const handleRemoveGear = (index) => {
+  console.log("index:" + index);
+  gear.value.splice(index, 1);
+
+};
+
 const handleAddPerk = (newPerk) => {
   perks.value.push(newPerk);
 };
@@ -211,6 +223,12 @@ const handleUpdatePerk = (updatePerk) => {
   perks.value[index] = updatePerk;
 
   console.log(perks.value)
+
+};
+
+const handleRemovePerk = (index) => {
+  console.log("index:" + index);
+  perks.value.splice(index, 1);
 
 };
 
@@ -395,6 +413,9 @@ watch([current_hp,max_hp,poison_dr,meleeDamage, defense, initiative, left_arm_st
 const weapons = ref([]);
 const handleUpdateWeapons = (newWeapons) => {
   weapons.value = newWeapons;
+};
+const handleRemoveWeapons = (index) => {
+  weapons.value.splice(index, 1);
 };
 
 /* When any sheet prop is updated, we need to save the updated value to the localStorage */
